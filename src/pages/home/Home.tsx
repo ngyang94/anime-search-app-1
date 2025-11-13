@@ -100,10 +100,6 @@ export default function Home(){
         }
     },[]);
 
-    useEffect(()=>{
-        console.log(isLoading);
-    },[isLoading]);
-    
     return (
         <>
             <Header onClick={headerClickedHandler}/>
