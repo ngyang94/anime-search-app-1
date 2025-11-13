@@ -17,7 +17,7 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import {useNavigate} from 'react-router-dom';
-
+import { Spinner } from "@/components/ui/spinner";
 
 import {type RootState,type AppDispatch} from '../../state/store';
 import {getAnimeList} from '../../state/anime/animeSlice';
@@ -43,19 +43,25 @@ export default function Home(){
         return localStorage.getItem("animeInput")||"";
     });
     const navigate = useNavigate();
+    const [isLoading,setIsLoading] = useState(false);
 
-    const searchAnimeList = debounce((args)=>{
-        dispatch(getAnimeList({animeName:args||"",abortController:abortController}));
+    const searchAnimeList = debounce(async(args)=>{
+        
+        setIsLoading(true);
+        await dispatch(getAnimeList({animeName:args||"",abortController:abortController}));
+        setIsLoading(false);
 
     },1500);
 
-    const gotoPage = (page:number)=>{
+    const gotoPage = async(page:number)=>{
 
         if(!abortController.signal.aborted){
             abortController.abort();
             abortController = new AbortController();
         }
-        dispatch(getAnimeList({animeName:animeInput,abortController:abortController,page}));
+        setIsLoading(true);
+        await dispatch(getAnimeList({animeName:animeInput,abortController:abortController,page}));
+        setIsLoading(false);
 
     };
 
@@ -75,26 +81,28 @@ export default function Home(){
         navigate("/anime-details",{state:anime});
     }
 
-    function headerClickedHandler(){
+    async function headerClickedHandler(){
         setAnimeInput("");
         localStorage.setItem("animeInput","");
         if(!abortController.signal.aborted){
             abortController.abort();
             abortController = new AbortController();
         }
-        dispatch(getAnimeList({animeName:"",abortController:abortController}));
+        setIsLoading(true);
+        await dispatch(getAnimeList({animeName:"",abortController:abortController}));
+        setIsLoading(false);
     }
 
     useEffect(()=>{
         if(animeList.length==0&&localStorage.getItem("animeInput")==""){
-            dispatch(getAnimeList({animeName:"",abortController:abortController}));
+            // dispatch(getAnimeList({animeName:"",abortController:abortController}));
+            searchAnimeList("");
         }
     },[]);
 
-    // useEffect(()=>{
-    //     console.log(animeList);
-    //     console.log(pagination);
-    // },[animeList]);
+    useEffect(()=>{
+        console.log(isLoading);
+    },[isLoading]);
     
     return (
         <>
@@ -102,9 +110,11 @@ export default function Home(){
             <main className="bg-white pb-1">
                 <div className="px-10">
                     <InputGroup>
-                        <InputGroupInput placeholder="Search..." value={animeInput} onChange={(e)=>{animeInputHandler(e);}}/>
+                        <InputGroupInput placeholder="Search" value={animeInput} onChange={(e)=>{animeInputHandler(e);}}/>
                         <InputGroupAddon>
-                        <Search />
+                        {
+                            isLoading?<Spinner />:<Search />
+                        }
                         </InputGroupAddon>
                     </InputGroup>
                 </div>
