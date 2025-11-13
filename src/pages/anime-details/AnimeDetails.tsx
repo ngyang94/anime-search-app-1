@@ -1,4 +1,3 @@
-import {useEffect} from 'react';
 import {useLocation} from 'react-router-dom';
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
@@ -11,11 +10,7 @@ export default function AnimeDetails(){
 
     const location = useLocation();
     const animeDetails = location.state;
-    
-    useEffect(()=>{
-        console.log(animeDetails);
-    },[]);
-
+  
     return (
         <>
             <Header/>
@@ -36,11 +31,11 @@ export default function AnimeDetails(){
                         <p><span className="font-semibold">Aired:</span> {formatDate(new Date(animeDetails.aired.from))} {animeDetails.aired.to?(<>to {formatDate(new Date(animeDetails.aired.to))}</>):(<></>)}</p>
                         <p><span className="font-semibold">Duration:</span> {animeDetails.duration}</p>
                         <p><span className="font-semibold">Episodes:</span> {animeDetails.episodes}</p>
-                        <p><span className="font-semibold">Genres:</span> {animeDetails.genres.map((genre:{name:string})=>{return <Badge className="mr-2">{genre.name}</Badge>;})}</p>
+                        <p><span className="font-semibold">Genres:</span> {animeDetails.genres.map((genre:{name:string},index:number)=>{return <Badge key={index} className="mr-2">{genre.name}</Badge>;})}</p>
 
-                        <p><span className="font-semibold">Producers:</span> {animeDetails.producers.map((producer:{name:string},index:number)=>{return (index!=animeDetails.producers.length-1?<span>{producer.name}, </span>:<span>{producer.name}</span>);})}</p>
+                        <p><span className="font-semibold">Producers:</span> {animeDetails.producers.map((producer:{name:string},index:number)=>{return (index!=animeDetails.producers.length-1?<span key={index}>{producer.name}, </span>:<span key={index}>{producer.name}</span>);})}</p>
                         <p><span className="font-semibold">Status:</span> {animeDetails.status}</p>
-                        <p><span className="font-semibold">Themes:</span> {animeDetails.themes.map((theme:{name:string},index:number)=>{return (index!=animeDetails.themes.length-1?<span>{theme.name}, </span>:<span>{theme.name}</span>);})}</p>
+                        <p><span className="font-semibold">Themes:</span> {animeDetails.themes.map((theme:{name:string},index:number)=>{return (index!=animeDetails.themes.length-1?<span key={index}>{theme.name}, </span>:<span key={index}>{theme.name}</span>);})}</p>
                         <p><span className="font-semibold">Status:</span> {animeDetails.status}</p>
 
                         <p className="pt-3 font-semibold">Synopsis</p>

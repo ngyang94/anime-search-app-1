@@ -38,7 +38,6 @@ export const getAnimeList = createAsyncThunk(
                 signal:abortController.signal
             }
         );
-        
         if(!response.ok){
             return {data:[],pagination:{}};
         }

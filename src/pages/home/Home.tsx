@@ -39,12 +39,13 @@ export default function Home(){
     const animeList = useSelector((state:RootState)=>state.value.animeList);
     const pagination = useSelector((state:RootState)=>state.value.pagination);
     const dispatch = useDispatch<AppDispatch>();
-    const [animeInput,setAnimeInput] = useState("");
+    const [animeInput,setAnimeInput] = useState(()=>{
+        return localStorage.getItem("animeInput")||"";
+    });
     const navigate = useNavigate();
 
     const searchAnimeList = debounce((args)=>{
-        
-        dispatch(getAnimeList({animeName:args[0]||"",abortController:abortController}));
+        dispatch(getAnimeList({animeName:args||"",abortController:abortController}));
 
     },1500);
 
@@ -59,7 +60,10 @@ export default function Home(){
     };
 
     function animeInputHandler(event:ChangeEvent<HTMLInputElement>){
+
         setAnimeInput(event.target.value);
+        localStorage.setItem("animeInput",event.target.value);
+
         if(!abortController.signal.aborted){
             abortController.abort();
             abortController = new AbortController();
@@ -70,8 +74,21 @@ export default function Home(){
     function gotoAnimeDetailsPage(anime:any){
         navigate("/anime-details",{state:anime});
     }
-    useEffect(()=>{
+
+    function headerClickedHandler(){
+        setAnimeInput("");
+        localStorage.setItem("animeInput","");
+        if(!abortController.signal.aborted){
+            abortController.abort();
+            abortController = new AbortController();
+        }
         dispatch(getAnimeList({animeName:"",abortController:abortController}));
+    }
+
+    useEffect(()=>{
+        if(animeList.length==0&&localStorage.getItem("animeInput")==""){
+            dispatch(getAnimeList({animeName:"",abortController:abortController}));
+        }
     },[]);
 
     // useEffect(()=>{
@@ -81,7 +98,7 @@ export default function Home(){
     
     return (
         <>
-            <Header/>
+            <Header onClick={headerClickedHandler}/>
             <main className="bg-white pb-1">
                 <div className="px-10">
                     <InputGroup>
@@ -142,7 +159,6 @@ export default function Home(){
                             );
                         })
                     }
-                    
                     
                 </div>
                 

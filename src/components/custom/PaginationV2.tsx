@@ -39,9 +39,16 @@ export default function PaginationV2({pagination,goToPage,maxPaginationAmountSho
         }
 
     }else if(!!pagination&&pagination.current_page<=Math.round(maxPaginationAmountShow/2)){
-        for(let i=1;i<=maxPaginationAmountShow;i++){
-            paginationNoToRender.push(i);
-        } 
+        if(pagination.last_visible_page>maxPaginationAmountShow){
+            for(let i=1;i<=maxPaginationAmountShow;i++){
+                paginationNoToRender.push(i);
+            } 
+        }else{
+            for(let i=1;i<=pagination.last_visible_page;i++){
+                paginationNoToRender.push(i);
+            } 
+        }
+        
     }
 
     function inputPageNoHandler(event:FormEvent<HTMLInputElement>){
