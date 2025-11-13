@@ -1,31 +1,16 @@
 import {createSlice,createAsyncThunk} from '@reduxjs/toolkit';
 
-type animeListType = [
-    {
-        images:{
-            jpg:{
-                image_url:string,
-                large_image_url:string,
-                small_image_url:string
-            }
-        },
-        title:string,
-        title_japanese:string,
-        score:string,
-        popularity:string,
-        synopsis:string
-    }
-]|[];
+import {type animeListType, type paginationType} from '../../lib/sharedTypes';
 
 const initialState:{
     value:{
         animeList:animeListType,
-        pagination:{}
+        pagination:paginationType
     }
 } = {
     value:{
         animeList:[],
-        pagination:{}
+        pagination:null
     }
 }
 
@@ -45,7 +30,7 @@ const animeSlice = createSlice({
 
 export const getAnimeList = createAsyncThunk(
     "anime/getAnimeList",
-    async({animeName,abortController,limit=24,page=1}:{animeName:string,abortController:AbortController,limit?:number,page?:number})=>{
+    async({animeName,abortController,page=1,limit=24}:{animeName:string,abortController:AbortController,page?:number,limit?:number})=>{
         
         const response = await fetch(
             `https://api.jikan.moe/v4/anime?q=${animeName}&limit=${limit}&page=${page}`,

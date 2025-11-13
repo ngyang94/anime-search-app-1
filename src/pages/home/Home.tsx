@@ -12,10 +12,12 @@ import {
 import {useSelector,useDispatch} from 'react-redux';
 import { Skeleton } from "@/components/ui/skeleton";
 
+
 import {type RootState,type AppDispatch} from '../../state/store';
 import {getAnimeList} from '../../state/anime/animeSlice';
 import './Home.css';
 import { debounce } from '@/utils/optimization';
+import PaginationV2 from '../../components/custom/PaginationV2';
 
 let abortController = new AbortController();
 
@@ -28,6 +30,7 @@ export default function Home(){
     }
 
     const animeList = useSelector((state:RootState)=>state.value.animeList);
+    const pagination = useSelector((state:RootState)=>state.value.pagination);
     const dispatch = useDispatch<AppDispatch>();
     const [animeInput,setAnimeInput] = useState("");
 
@@ -36,6 +39,16 @@ export default function Home(){
         dispatch(getAnimeList({animeName:args[0]||"",abortController:abortController}));
 
     },1500);
+
+    const gotoPage = (page:number)=>{
+
+        if(!abortController.signal.aborted){
+            abortController.abort();
+            abortController = new AbortController();
+        }
+        dispatch(getAnimeList({animeName:animeInput,abortController:abortController,page}));
+
+    };
 
     function animeInputHandler(event:ChangeEvent<HTMLInputElement>){
         setAnimeInput(event.target.value);
@@ -51,6 +64,7 @@ export default function Home(){
     },[]);
     useEffect(()=>{
         console.log(animeList);
+        console.log(pagination);
     },[animeList]);
     
     return (
@@ -60,7 +74,7 @@ export default function Home(){
                     <h1 className="text-5xl font-bold text-center p-10">Anime Search App</h1>
                 </div>
             </header>
-            <main className="bg-white">
+            <main className="bg-white pb-1">
                 <div className="px-10">
                     <InputGroup>
                         <InputGroupInput placeholder="Search..." value={animeInput} onChange={(e)=>{animeInputHandler(e);}}/>
@@ -125,6 +139,9 @@ export default function Home(){
                     
                     
                 </div>
+                
+                <PaginationV2 pagination={pagination} goToPage={gotoPage} maxPaginationAmountShow={5}/>
+
             </main>
         </>
     );
