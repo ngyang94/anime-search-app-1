@@ -16,6 +16,7 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import {useNavigate} from 'react-router-dom';
 
 
 import {type RootState,type AppDispatch} from '../../state/store';
@@ -23,6 +24,7 @@ import {getAnimeList} from '../../state/anime/animeSlice';
 import './Home.css';
 import { debounce } from '@/utils/optimization';
 import PaginationV2 from '../../components/custom/PaginationV2';
+import Header from '../../components/custom/Header';
 
 let abortController = new AbortController();
 
@@ -38,6 +40,7 @@ export default function Home(){
     const pagination = useSelector((state:RootState)=>state.value.pagination);
     const dispatch = useDispatch<AppDispatch>();
     const [animeInput,setAnimeInput] = useState("");
+    const navigate = useNavigate();
 
     const searchAnimeList = debounce((args)=>{
         
@@ -63,22 +66,22 @@ export default function Home(){
         }
         searchAnimeList(event.target?.value.trim());
     }
+
+    function gotoAnimeDetailsPage(anime:any){
+        navigate("/anime-details",{state:anime});
+    }
     useEffect(()=>{
-        console.log("render home");
         dispatch(getAnimeList({animeName:"",abortController:abortController}));
     },[]);
-    useEffect(()=>{
-        console.log(animeList);
-        console.log(pagination);
-    },[animeList]);
+
+    // useEffect(()=>{
+    //     console.log(animeList);
+    //     console.log(pagination);
+    // },[animeList]);
     
     return (
         <>
-            <header className="bg-white">
-                <div>
-                    <h1 className="text-5xl font-bold text-center p-10">Anime Search App</h1>
-                </div>
-            </header>
+            <Header/>
             <main className="bg-white pb-1">
                 <div className="px-10">
                     <InputGroup>
@@ -88,11 +91,11 @@ export default function Home(){
                         </InputGroupAddon>
                     </InputGroup>
                 </div>
-                <div className="m-5 p-5 grid grid-cols-3 gap-5">
+                <div className="m-5 p-5 grid grid-cols-3 gap-5 items-stretch">
                     {
                         animeList.length==0&&skeletonAmountToRender.map((skeleton)=>{
                             return (
-                                <Card className="px-2 py-2" key={skeleton}>
+                                <Card className="px-2 py-2 h-full" key={skeleton}>
                                     <CardContent className="p-0">
                                         
                                         <div className="grid grid-cols-4 gap-1">
@@ -112,33 +115,30 @@ export default function Home(){
                     {
                         animeList.map((anime,index)=>{
                             return (
-                                <Tooltip delayDuration={500}>
+                                <Tooltip delayDuration={500} key={index}>
                                     <TooltipTrigger>
-                                        <Card className="px-2 py-2 group hover:bg-yellow-50" key={index}>
-                                            <CardContent className="p-0">
+                                        <Card className="px-2 py-2 group hover:bg-yellow-50 h-full" onClick={()=>{gotoAnimeDetailsPage(anime);}}>
+                                            <CardContent className="p-0 flex flex-col h-full m-0">
                                                 <div className="grid grid-cols-4 gap-1">
-                                                    <div className="w-1xl h-1xl bg-black overflow-hidden self-center col-span-1">
+                                                    <div className="w-1xl h-1xl bg-black overflow-hidden self-baseline col-span-1">
                                                         <img className="h-full object-fit" src={anime.images.jpg.image_url}/>
                                                     </div>
-                                                    <div className="px-2 col-span-3">
-                                                        <p className="text-1xl font-bold mb-1">{anime.title}</p>
-                                                        <p className="font-bold mb-1">{anime.title_japanese}</p>
+                                                    <div className="px-2 col-span-3 text-left block">
+                                                        <p className="text-1xl font-bold pb-2">{anime.title}</p>
+                                                        <p className="font-bold pb-2">{anime.title_japanese}</p>
                                                         <p>Score: {anime.score}</p>
                                                         <p>Popularity: {anime.popularity}</p>
-                                                        
-                                                        
                                                     </div>
                                                 </div>
                                             </CardContent>
                                         </Card>
                                     </TooltipTrigger>
-                                        <TooltipContent>
-                                            <div className="w-100 text-1xl">
-                                                {anime.synopsis}
-                                            </div>
-                                        </TooltipContent>
-                                    </Tooltip>
-                                
+                                    <TooltipContent>
+                                        <div className="w-100 text-1xl">
+                                            {anime.synopsis}
+                                        </div>
+                                    </TooltipContent>
+                                </Tooltip>
                             );
                         })
                     }

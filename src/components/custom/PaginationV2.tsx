@@ -1,4 +1,4 @@
-import {useEffect,useState,useRef, type FormEvent} from 'react';
+import {useState, type FormEvent} from 'react';
 import {
   Pagination,
   PaginationContent,
@@ -33,7 +33,6 @@ export default function PaginationV2({pagination,goToPage,maxPaginationAmountSho
                 paginationNoToRender.push(i);
             }
         }else{
-            console.log("do here");
             for(let i=pagination.last_visible_page-maxPaginationAmountShow+1;i<=pagination.last_visible_page;i++){
                 paginationNoToRender.push(i);
             } 
@@ -62,12 +61,6 @@ export default function PaginationV2({pagination,goToPage,maxPaginationAmountSho
         
     }
        
-    useEffect(()=>{
-
-        console.log("paginationNoRender:",paginationNoToRender);
-        console.log(popOverIsOpen);
-    },[pagination]);
-
     return (
         <>
             <Pagination>
@@ -82,9 +75,9 @@ export default function PaginationV2({pagination,goToPage,maxPaginationAmountSho
                     </PaginationItem>
 
                     {
-                        paginationNoToRender.map((paginationNo)=>{
+                        paginationNoToRender.map((paginationNo,index)=>{
                             return (
-                                <PaginationItem>
+                                <PaginationItem key={index}>
                                     <PaginationLink href="#" isActive={!!pagination&&pagination.current_page==paginationNo} onClick={(e)=>{e.preventDefault();goToPage(paginationNo)}}>{paginationNo}</PaginationLink>
                                 </PaginationItem>
                             );
