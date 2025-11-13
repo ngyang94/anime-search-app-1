@@ -94,8 +94,11 @@ export default function Home(){
     }
 
     useEffect(()=>{
-        if(animeList.length==0&&localStorage.getItem("animeInput")==""){
+        if(animeList.length==0){
             // dispatch(getAnimeList({animeName:"",abortController:abortController}));
+            
+            localStorage.setItem("animeInput","");
+            setAnimeInput("");
             searchAnimeList("");
         }
     },[]);
