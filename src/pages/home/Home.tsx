@@ -11,6 +11,11 @@ import {
 } from "@/components/ui/card";
 import {useSelector,useDispatch} from 'react-redux';
 import { Skeleton } from "@/components/ui/skeleton";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 
 import {type RootState,type AppDispatch} from '../../state/store';
@@ -107,32 +112,33 @@ export default function Home(){
                     {
                         animeList.map((anime,index)=>{
                             return (
-                                <Card className="px-2 py-2 group hover:bg-yellow-50" key={index}>
-                                    <CardContent className="p-0">
-                                        <div className="grid grid-cols-4 gap-1">
-                                            <div className="w-1xl h-1xl bg-black overflow-hidden self-center col-span-1">
-                                                <img className="h-full object-fit" src={anime.images.jpg.image_url}/>
-                                            </div>
-                                            <div className="px-2 col-span-3">
-                                                <p className="text-1xl font-bold mb-1">{anime.title}</p>
-                                                <p className="font-bold mb-1">{anime.title_japanese}</p>
-                                                <p>Score: {anime.score}</p>
-                                                <p>Popularity: {anime.popularity}</p>
-                                                {index>=12?(
-                                                    <div className="transform -translate-y-full absolute invisible group-hover:visible bg-white p-2 rounded-1xl border-2 before:content-[''] before:block before:border-solid before:border-r-black before:border-r-4 before:border-y-transparent before:border-y-4 before:border-l-0  before:absolute before:transform before:bottom-0 before:-left-1">
-                                                        {anime.synopsis}
+                                <Tooltip delayDuration={500}>
+                                    <TooltipTrigger>
+                                        <Card className="px-2 py-2 group hover:bg-yellow-50" key={index}>
+                                            <CardContent className="p-0">
+                                                <div className="grid grid-cols-4 gap-1">
+                                                    <div className="w-1xl h-1xl bg-black overflow-hidden self-center col-span-1">
+                                                        <img className="h-full object-fit" src={anime.images.jpg.image_url}/>
                                                     </div>
-                                                ):(
-                                                    <div className="absolute invisible group-hover:visible bg-white p-2 rounded-1xl border-2 before:content-[''] before:block before:border-solid before:border-r-black before:border-r-4 before:border-y-transparent before:border-y-4 before:border-l-0  before:absolute before:transform before:-top-0.5 before:-left-1">
-                                                        {anime.synopsis}
+                                                    <div className="px-2 col-span-3">
+                                                        <p className="text-1xl font-bold mb-1">{anime.title}</p>
+                                                        <p className="font-bold mb-1">{anime.title_japanese}</p>
+                                                        <p>Score: {anime.score}</p>
+                                                        <p>Popularity: {anime.popularity}</p>
+                                                        
+                                                        
                                                     </div>
-                                                )}
-                                                
-                                                
+                                                </div>
+                                            </CardContent>
+                                        </Card>
+                                    </TooltipTrigger>
+                                        <TooltipContent>
+                                            <div className="w-100 text-1xl">
+                                                {anime.synopsis}
                                             </div>
-                                        </div>
-                                    </CardContent>
-                                </Card>
+                                        </TooltipContent>
+                                    </Tooltip>
+                                
                             );
                         })
                     }
