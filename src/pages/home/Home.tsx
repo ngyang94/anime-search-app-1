@@ -127,10 +127,10 @@ export default function Home(){
                                         <div className="grid grid-cols-4 gap-1">
                                             <Skeleton className="w-20 h-[150px] self-center col-span-1" />
                                             <div className="px-2 col-span-3 gap-2 flex flex-col space-y-1">
-                                                <Skeleton className="text-1xl h-5 w-[210px]"/>
-                                                <Skeleton className="h-5 w-[210px]"/>
-                                                <Skeleton className="h-5 w-[210px]"/>
-                                                <Skeleton className="h-5 w-[210px]"/>
+                                                <Skeleton className="text-1xl h-5 w-full"/>
+                                                <Skeleton className="h-5 w-full"/>
+                                                <Skeleton className="h-5 w-full"/>
+                                                <Skeleton className="h-5 w-full"/>
                                             </div>
                                         </div>
                                     </CardContent>
