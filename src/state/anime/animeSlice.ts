@@ -3,15 +3,11 @@ import {createSlice,createAsyncThunk} from '@reduxjs/toolkit';
 import {type animeListType, type paginationType} from '../../lib/sharedTypes';
 
 const initialState:{
-    value:{
-        animeList:animeListType,
+    animeList:animeListType,
         pagination:paginationType
-    }
 } = {
-    value:{
-        animeList:[],
-        pagination:null
-    }
+    animeList:[],
+    pagination:null
 }
 
 const animeSlice = createSlice({
@@ -22,8 +18,9 @@ const animeSlice = createSlice({
     },
     extraReducers:(builder)=>{
         builder.addCase(getAnimeList.fulfilled,(state,action)=>{
-            state.value.animeList = action.payload.data;
-            state.value.pagination = action.payload.pagination;
+            state.animeList = action.payload.data;
+            state.pagination = action.payload.pagination;
+            console.log(action.payload.pagination);
         })
     }
 })
@@ -42,6 +39,33 @@ export const getAnimeList = createAsyncThunk(
             return {data:[],pagination:{}};
         }
         const result = await response.json();
+
+        // return {
+        //     data:[
+        //         {
+        //             images:{
+        //                 jpg:{
+        //                     image_url:"./test-image.jpg"
+        //                 }
+        //             },
+        //             title:"this is a test title",
+        //             title_japanese:"this is a test japanense title",
+        //             score:5.0,
+        //             popularity:10,
+        //             synopsis:"this is a test synopsis"
+        //         }
+        //     ],
+        //     pagination:{
+        //         current_page:1,
+        //         has_next_page:true,
+        //         items:{
+        //             count:24,
+        //             per_page:24,
+        //             total:48,
+        //         },
+        //         last_visible_page:2
+        //     }
+        // };
         
         return result;
     }

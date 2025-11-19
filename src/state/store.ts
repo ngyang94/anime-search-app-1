@@ -1,12 +1,22 @@
-import {configureStore} from '@reduxjs/toolkit';
+import {configureStore,combineReducers} from '@reduxjs/toolkit';
 
 import animeReducer from './anime/animeSlice';
 
-const store = configureStore({
-    reducer:animeReducer
-});
+const rootReducer = combineReducers({
+  anime: animeReducer
+})
 
-export type RootState = ReturnType<typeof store.getState>
+export function setupStore(preloadedState?: Partial<RootState>) {
+  return configureStore({
+    reducer:rootReducer,
+    preloadedState
+})
+}
+
+const store = setupStore();
+
+export type RootState = ReturnType<typeof rootReducer>
+// export type RootState = ReturnType<typeof store.getState>
 export type AppDispatch = typeof store.dispatch
-
+export type AppStore = ReturnType<typeof setupStore>
 export default store;

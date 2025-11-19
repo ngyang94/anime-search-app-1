@@ -36,8 +36,8 @@ export default function Home(){
         skeletonAmountToRender.push(i);
     }
 
-    const animeList = useSelector((state:RootState)=>state.value.animeList);
-    const pagination = useSelector((state:RootState)=>state.value.pagination);
+    const animeList = useSelector((state:RootState)=>state.anime.animeList);
+    const pagination = useSelector((state:RootState)=>state.anime.pagination);
     const dispatch = useDispatch<AppDispatch>();
     const [animeInput,setAnimeInput] = useState(()=>{
         return localStorage.getItem("animeInput")||"";
@@ -108,16 +108,16 @@ export default function Home(){
             <Header onClick={headerClickedHandler}/>
             <main className="bg-white pb-1">
                 <div className="px-10">
-                    <InputGroup>
-                        <InputGroupInput placeholder="Search" value={animeInput} onChange={(e)=>{animeInputHandler(e);}}/>
+                    <InputGroup data-testid="input-group-search-anime">
+                        <InputGroupInput data-testid="search-anime-input" placeholder="Search" value={animeInput} onChange={(e)=>{animeInputHandler(e);}}/>
                         <InputGroupAddon>
                         {
-                            isLoading?<Spinner />:<Search />
+                            isLoading?<Spinner />:<Search/>
                         }
                         </InputGroupAddon>
                     </InputGroup>
                 </div>
-                <div className="m-5 p-5 grid grid-cols-3 gap-5 items-stretch">
+                <div data-testid="anime-list" className="m-5 p-5 grid grid-cols-3 gap-5 items-stretch">
                     {
                         animeList.length==0&&skeletonAmountToRender.map((skeleton)=>{
                             return (
@@ -143,7 +143,7 @@ export default function Home(){
                             return (
                                 <Tooltip delayDuration={500} key={index}>
                                     <TooltipTrigger>
-                                        <Card className="px-2 py-2 group hover:bg-yellow-50 h-full" onClick={()=>{gotoAnimeDetailsPage(anime);}}>
+                                        <Card data-testid="anime-short-detail-card" className="px-2 py-2 group hover:bg-yellow-50 h-full" onClick={()=>{gotoAnimeDetailsPage(anime);}}>
                                             <CardContent className="p-0 flex flex-col h-full m-0">
                                                 <div className="grid grid-cols-4 gap-1">
                                                     <div className="w-1xl h-1xl bg-black overflow-hidden self-baseline col-span-1">
