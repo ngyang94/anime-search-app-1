@@ -16,7 +16,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button"
 
-import {type paginationType} from '../../lib/sharedTypes';
+import {type paginationType} from '../../models/anime';
 import './PaginationV2.css';
 
 export default function PaginationV2({pagination,goToPage,maxPaginationAmountShow}:{pagination:paginationType,goToPage:(args:any)=>void,maxPaginationAmountShow:number}){

@@ -1,6 +1,6 @@
 import {createSlice,createAsyncThunk} from '@reduxjs/toolkit';
 
-import {type animeListType, type paginationType} from '../../lib/sharedTypes';
+import {type animeListType, type paginationType} from '../../models/anime';
 
 const initialState:{
     animeList:animeListType,
