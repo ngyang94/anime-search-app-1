@@ -147,65 +147,61 @@ export default function Home(){
                     </div>
                 }
                 
-                {
-                    isLoading&&(
-                        <div data-testid="anime-list" className="m-5 p-5 grid grid-cols-3 gap-5 items-stretch">
-                            {
-                                isLoading&&animeList.length==0&&(
-                                    skeletonAmountToRender.map((skeleton)=>{
-                                        return (
-                                            <Card className="px-2 py-2 h-full" key={skeleton}>
-                                                <CardContent className="p-0">
-                                                    
-                                                    <div className="grid grid-cols-4 gap-1">
-                                                        <Skeleton className="w-20 h-[150px] self-center col-span-1" />
-                                                        <div className="px-2 col-span-3 gap-2 flex flex-col space-y-1">
-                                                            <Skeleton className="text-1xl h-5 w-full"/>
-                                                            <Skeleton className="h-5 w-full"/>
-                                                            <Skeleton className="h-5 w-full"/>
-                                                            <Skeleton className="h-5 w-full"/>
-                                                        </div>
-                                                    </div>
-                                                </CardContent>
-                                            </Card>
-                                        );
-                                    })
-                                )
-                            }
-                            {
-                                animeList.map((anime,index)=>{
-                                    return (
-                                        <Tooltip delayDuration={500} key={index}>
-                                            <TooltipTrigger>
-                                                <Card data-testid="anime-short-detail-card" className="px-2 py-2 group hover:bg-yellow-50 h-full" onClick={()=>{gotoAnimeDetailsPage(anime);}}>
-                                                    <CardContent className="p-0 flex flex-col h-full m-0">
-                                                        <div className="grid grid-cols-4 gap-1">
-                                                            <div className="w-1xl h-1xl bg-black overflow-hidden self-baseline col-span-1">
-                                                                <img className="h-full object-fit" src={anime.images.jpg.image_url}/>
-                                                            </div>
-                                                            <div className="px-2 col-span-3 text-left block">
-                                                                <p className="text-1xl font-bold pb-2">{anime.title}</p>
-                                                                <p className="font-bold pb-2">{anime.title_japanese}</p>
-                                                                <p>Score: {anime.score}</p>
-                                                                <p>Popularity: {anime.popularity}</p>
-                                                            </div>
-                                                        </div>
-                                                    </CardContent>
-                                                </Card>
-                                            </TooltipTrigger>
-                                            <TooltipContent>
-                                                <div className="w-100 text-1xl">
-                                                    {anime.synopsis}
+                <div data-testid="anime-list" className="m-5 p-5 grid grid-cols-3 gap-5 items-stretch">
+                    {
+                        isLoading&&animeList.length==0&&(
+                            skeletonAmountToRender.map((skeleton)=>{
+                                return (
+                                    <Card className="px-2 py-2 h-full" key={skeleton}>
+                                        <CardContent className="p-0">
+                                            
+                                            <div className="grid grid-cols-4 gap-1">
+                                                <Skeleton className="w-20 h-[150px] self-center col-span-1" />
+                                                <div className="px-2 col-span-3 gap-2 flex flex-col space-y-1">
+                                                    <Skeleton className="text-1xl h-5 w-full"/>
+                                                    <Skeleton className="h-5 w-full"/>
+                                                    <Skeleton className="h-5 w-full"/>
+                                                    <Skeleton className="h-5 w-full"/>
                                                 </div>
-                                            </TooltipContent>
-                                        </Tooltip>
-                                    );
-                                })
-                            }
-                            
-                        </div>
-                    )
-                }
+                                            </div>
+                                        </CardContent>
+                                    </Card>
+                                );
+                            })
+                        )
+                    }
+                    {
+                        animeList.map((anime,index)=>{
+                            return (
+                                <Tooltip delayDuration={500} key={index}>
+                                    <TooltipTrigger>
+                                        <Card data-testid="anime-short-detail-card" className="px-2 py-2 group hover:bg-yellow-50 h-full" onClick={()=>{gotoAnimeDetailsPage(anime);}}>
+                                            <CardContent className="p-0 flex flex-col h-full m-0">
+                                                <div className="grid grid-cols-4 gap-1">
+                                                    <div className="w-1xl h-1xl bg-black overflow-hidden self-baseline col-span-1">
+                                                        <img className="h-full object-fit" src={anime.images.jpg.image_url}/>
+                                                    </div>
+                                                    <div className="px-2 col-span-3 text-left block">
+                                                        <p className="text-1xl font-bold pb-2">{anime.title}</p>
+                                                        <p className="font-bold pb-2">{anime.title_japanese}</p>
+                                                        <p>Score: {anime.score}</p>
+                                                        <p>Popularity: {anime.popularity}</p>
+                                                    </div>
+                                                </div>
+                                            </CardContent>
+                                        </Card>
+                                    </TooltipTrigger>
+                                    <TooltipContent>
+                                        <div className="w-100 text-1xl">
+                                            {anime.synopsis}
+                                        </div>
+                                    </TooltipContent>
+                                </Tooltip>
+                            );
+                        })
+                    }
+                    
+                </div>
                 {
                     !isLoading&&animeList.length==0&&(
                         <div className="m-5 p-5 min-w-max">
@@ -218,7 +214,7 @@ export default function Home(){
                     )
                 }
                 {
-                    !isLoading&&!!pagination&&animeList.length>0&&<PaginationV2 pagination={pagination} goToPage={gotoPage} maxPaginationAmountShow={5}/>
+                    !!pagination&&animeList.length>0&&<PaginationV2 pagination={pagination} goToPage={gotoPage} maxPaginationAmountShow={5}/>
                 }
                 
 

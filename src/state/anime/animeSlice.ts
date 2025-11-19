@@ -44,7 +44,7 @@ const animeSlice = createSlice({
 
 export const getAnimeList = createAsyncThunk(
     "anime/getAnimeList",
-    async({animeName,abortController,page=9999,limit=24}:{animeName:string,abortController:AbortController,page?:number,limit?:number})=>{
+    async({animeName,abortController,page=1,limit=24}:{animeName:string,abortController:AbortController,page?:number,limit?:number})=>{
         
         const response = await fetch(
             `https://api.jikan.moe/v4/anime?q=${animeName}&limit=${limit}&page=${page}`,
