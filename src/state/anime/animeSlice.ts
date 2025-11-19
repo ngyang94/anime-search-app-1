@@ -23,7 +23,6 @@ const animeSlice = createSlice({
                 state.animeList = action.payload.data;
                 state.pagination = action.payload.pagination;
                 state.apiStatus = action.payload.apiStatus;
-                console.log(action.payload.pagination);
             }
         ).addCase(
             getAnimeList.rejected,

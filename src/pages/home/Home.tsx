@@ -46,7 +46,7 @@ export default function Home(){
         return localStorage.getItem("animeInput")||"";
     });
     const navigate = useNavigate();
-    const [isLoading,setIsLoading] = useState(true);
+    const [isLoading,setIsLoading] = useState(false);
 
     const [showErrorMessage,setShowErrorMessage] = useState(false);
 
@@ -102,6 +102,7 @@ export default function Home(){
         if(animeList.length==0){
             // dispatch(getAnimeList({animeName:"",abortController:abortController}));
             
+            setIsLoading(true);
             localStorage.setItem("animeInput","");
             setAnimeInput("");
             searchAnimeList("");
