@@ -18,6 +18,8 @@ import {
 } from "@/components/ui/tooltip";
 import {useNavigate} from 'react-router-dom';
 import { Spinner } from "@/components/ui/spinner";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { AlertCircleIcon } from "lucide-react";
 
 import {type RootState,type AppDispatch} from '../../state/store';
 import {getAnimeList} from '../../state/anime/animeSlice';
@@ -38,12 +40,15 @@ export default function Home(){
 
     const animeList = useSelector((state:RootState)=>state.anime.animeList);
     const pagination = useSelector((state:RootState)=>state.anime.pagination);
+    const apiStatus = useSelector((state:RootState)=>state.anime.apiStatus);
     const dispatch = useDispatch<AppDispatch>();
     const [animeInput,setAnimeInput] = useState(()=>{
         return localStorage.getItem("animeInput")||"";
     });
     const navigate = useNavigate();
-    const [isLoading,setIsLoading] = useState(false);
+    const [isLoading,setIsLoading] = useState(true);
+
+    const [showErrorMessage,setShowErrorMessage] = useState(false);
 
     const searchAnimeList = debounce(async(args)=>{
         
@@ -103,10 +108,20 @@ export default function Home(){
         }
     },[]);
 
+    useEffect(()=>{
+        if(!!apiStatus&&apiStatus.status!=200){
+            setShowErrorMessage(true);
+            // setTimeout(()=>{
+            //     setShowErrorMessage(false);
+            // },5000)
+        }
+        
+    },[apiStatus]);
+
     return (
         <>
             <Header onClick={headerClickedHandler}/>
-            <main className="bg-white pb-1">
+            <main className="bg-white pb-1 min-h-dvh">
                 <div className="px-10">
                     <InputGroup data-testid="input-group-search-anime">
                         <InputGroupInput data-testid="search-anime-input" placeholder="Search" value={animeInput} onChange={(e)=>{animeInputHandler(e);}}/>
@@ -117,61 +132,95 @@ export default function Home(){
                         </InputGroupAddon>
                     </InputGroup>
                 </div>
-                <div data-testid="anime-list" className="m-5 p-5 grid grid-cols-3 gap-5 items-stretch">
-                    {
-                        animeList.length==0&&skeletonAmountToRender.map((skeleton)=>{
-                            return (
-                                <Card className="px-2 py-2 h-full" key={skeleton}>
-                                    <CardContent className="p-0">
-                                        
-                                        <div className="grid grid-cols-4 gap-1">
-                                            <Skeleton className="w-20 h-[150px] self-center col-span-1" />
-                                            <div className="px-2 col-span-3 gap-2 flex flex-col space-y-1">
-                                                <Skeleton className="text-1xl h-5 w-full"/>
-                                                <Skeleton className="h-5 w-full"/>
-                                                <Skeleton className="h-5 w-full"/>
-                                                <Skeleton className="h-5 w-full"/>
-                                            </div>
-                                        </div>
-                                    </CardContent>
-                                </Card>
-                            );
-                        })
-                    }
-                    {
-                        animeList.map((anime,index)=>{
-                            return (
-                                <Tooltip delayDuration={500} key={index}>
-                                    <TooltipTrigger>
-                                        <Card data-testid="anime-short-detail-card" className="px-2 py-2 group hover:bg-yellow-50 h-full" onClick={()=>{gotoAnimeDetailsPage(anime);}}>
-                                            <CardContent className="p-0 flex flex-col h-full m-0">
-                                                <div className="grid grid-cols-4 gap-1">
-                                                    <div className="w-1xl h-1xl bg-black overflow-hidden self-baseline col-span-1">
-                                                        <img className="h-full object-fit" src={anime.images.jpg.image_url}/>
-                                                    </div>
-                                                    <div className="px-2 col-span-3 text-left block">
-                                                        <p className="text-1xl font-bold pb-2">{anime.title}</p>
-                                                        <p className="font-bold pb-2">{anime.title_japanese}</p>
-                                                        <p>Score: {anime.score}</p>
-                                                        <p>Popularity: {anime.popularity}</p>
-                                                    </div>
-                                                </div>
-                                            </CardContent>
-                                        </Card>
-                                    </TooltipTrigger>
-                                    <TooltipContent>
-                                        <div className="w-100 text-1xl">
-                                            {anime.synopsis}
-                                        </div>
-                                    </TooltipContent>
-                                </Tooltip>
-                            );
-                        })
-                    }
-                    
-                </div>
                 
-                <PaginationV2 pagination={pagination} goToPage={gotoPage} maxPaginationAmountShow={5}/>
+                {
+                    !isLoading&&showErrorMessage&&
+                    <div className="mx-5 px-5 pt-5 min-w-max">
+                        <Alert variant="destructive" className='bg-red-50 border-red-50' onClick={()=>{setShowErrorMessage(false);}}>
+                            
+                            <AlertCircleIcon/>
+                            <AlertTitle>Error </AlertTitle>
+                            <AlertDescription>
+                                <p>{apiStatus?.message}</p>
+                            </AlertDescription>
+                        </Alert>
+                    </div>
+                }
+                
+                {
+                    isLoading&&(
+                        <div data-testid="anime-list" className="m-5 p-5 grid grid-cols-3 gap-5 items-stretch">
+                            {
+                                isLoading&&animeList.length==0&&(
+                                    skeletonAmountToRender.map((skeleton)=>{
+                                        return (
+                                            <Card className="px-2 py-2 h-full" key={skeleton}>
+                                                <CardContent className="p-0">
+                                                    
+                                                    <div className="grid grid-cols-4 gap-1">
+                                                        <Skeleton className="w-20 h-[150px] self-center col-span-1" />
+                                                        <div className="px-2 col-span-3 gap-2 flex flex-col space-y-1">
+                                                            <Skeleton className="text-1xl h-5 w-full"/>
+                                                            <Skeleton className="h-5 w-full"/>
+                                                            <Skeleton className="h-5 w-full"/>
+                                                            <Skeleton className="h-5 w-full"/>
+                                                        </div>
+                                                    </div>
+                                                </CardContent>
+                                            </Card>
+                                        );
+                                    })
+                                )
+                            }
+                            {
+                                animeList.map((anime,index)=>{
+                                    return (
+                                        <Tooltip delayDuration={500} key={index}>
+                                            <TooltipTrigger>
+                                                <Card data-testid="anime-short-detail-card" className="px-2 py-2 group hover:bg-yellow-50 h-full" onClick={()=>{gotoAnimeDetailsPage(anime);}}>
+                                                    <CardContent className="p-0 flex flex-col h-full m-0">
+                                                        <div className="grid grid-cols-4 gap-1">
+                                                            <div className="w-1xl h-1xl bg-black overflow-hidden self-baseline col-span-1">
+                                                                <img className="h-full object-fit" src={anime.images.jpg.image_url}/>
+                                                            </div>
+                                                            <div className="px-2 col-span-3 text-left block">
+                                                                <p className="text-1xl font-bold pb-2">{anime.title}</p>
+                                                                <p className="font-bold pb-2">{anime.title_japanese}</p>
+                                                                <p>Score: {anime.score}</p>
+                                                                <p>Popularity: {anime.popularity}</p>
+                                                            </div>
+                                                        </div>
+                                                    </CardContent>
+                                                </Card>
+                                            </TooltipTrigger>
+                                            <TooltipContent>
+                                                <div className="w-100 text-1xl">
+                                                    {anime.synopsis}
+                                                </div>
+                                            </TooltipContent>
+                                        </Tooltip>
+                                    );
+                                })
+                            }
+                            
+                        </div>
+                    )
+                }
+                {
+                    !isLoading&&animeList.length==0&&(
+                        <div className="m-5 p-5 min-w-max">
+                            <Card className="h-full w-full">
+                                <CardContent className="text-center py-20">
+                                    <span className='font-bold'>No Record Found.</span>
+                                </CardContent>
+                            </Card>
+                        </div>
+                    )
+                }
+                {
+                    !isLoading&&!!pagination&&animeList.length>0&&<PaginationV2 pagination={pagination} goToPage={gotoPage} maxPaginationAmountShow={5}/>
+                }
+                
 
             </main>
         </>

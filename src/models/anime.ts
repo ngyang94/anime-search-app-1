@@ -24,3 +24,9 @@ export type paginationType = {
     },
     last_visible_page:number;
 }|null;
+
+export type apiStatus = {
+    status:string|number;
+    statusText:string;
+    message:string;
+}|null;
