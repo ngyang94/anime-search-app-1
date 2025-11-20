@@ -23,7 +23,6 @@ import { AlertCircleIcon } from "lucide-react";
 
 import {type RootState,type AppDispatch} from '../../state/store';
 import {getAnimeList} from '../../state/anime/animeSlice';
-import './Home.css';
 import { debounce } from '@/utils/optimization';
 import PaginationV2 from '../../components/custom/PaginationV2';
 import Header from '../../components/custom/Header';
@@ -55,6 +54,7 @@ export default function Home(){
         setIsLoading(true);
         await dispatch(getAnimeList({animeName:args||"",abortController:abortController}));
         setIsLoading(false);
+        window.scrollTo(0, 0);
 
     },250);
 
@@ -67,6 +67,7 @@ export default function Home(){
         setIsLoading(true);
         await dispatch(getAnimeList({animeName:animeInput,abortController:abortController,page}));
         setIsLoading(false);
+        window.scrollTo(0, 0);
 
     };
 
@@ -99,6 +100,7 @@ export default function Home(){
     }
 
     useEffect(()=>{
+        window.scrollTo(0, 0);
         if(animeList.length==0){
             // dispatch(getAnimeList({animeName:"",abortController:abortController}));
             

@@ -1,20 +1,23 @@
+import {useEffect} from 'react';
 import {useLocation} from 'react-router-dom';
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 
 import Header from '../../components/custom/Header';
 import {formatDate} from '../../utils/date';
-import './AnimeDetails.css';
 
 export default function AnimeDetails(){
 
     const location = useLocation();
     const animeDetails = location.state;
+    useEffect(()=>{
+        window.scrollTo(0, 0);
+    });
     return (
         <>
             <Header/>
 
-            <main className="bg-white pb-1 px-10">
+            <main className="bg-white pb-1 px-10 h-screen">
                 <div className="grid grid-cols-7 gap-8 py-5">
                     <div className="col-span-2">
                         <div className="w-1xl h-1xl bg-black overflow-hidden">

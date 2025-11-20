@@ -30,7 +30,7 @@ const animeSlice = createSlice({
                 state.animeList = [];
                 state.pagination = null;
                 state.apiStatus = {
-                    status: action.meta.aborted?"Aborted":"Error",
+                    status: action.meta?.aborted?"Aborted":"Error",
                     statusText: action.error.message?.toString()||"",
                     message: action.error.message?.toString()||""
                 };
@@ -45,7 +45,7 @@ export const getAnimeList = createAsyncThunk(
     async({animeName,abortController,page=1,limit=24}:{animeName:string,abortController:AbortController,page?:number,limit?:number})=>{
         
         const encodeAnimeName = encodeURIComponent(animeName);
-        
+
         const response = await fetch(
             `https://api.jikan.moe/v4/anime?q=${encodeAnimeName}&limit=${limit}&page=${page}`,
             {

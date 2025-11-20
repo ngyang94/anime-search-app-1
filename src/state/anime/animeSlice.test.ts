@@ -105,7 +105,7 @@ describe("animeSlice", () => {
 
         globalThis.fetch = vi.fn().mockResolvedValue({
             ok: false,
-            status: 499,
+            status: "Aborted",
             statusText: "Client Closed Request"
         }) as unknown as Mock;
 

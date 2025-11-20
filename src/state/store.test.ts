@@ -33,7 +33,7 @@ describe("Redux Store Integration Test", () => {
 
         globalThis.fetch = vi.fn().mockResolvedValue({
             ok: true,
-            status: 200,
+            status: "success",
             statusText: "OK",
             json: async () => mockResponse
         }) as unknown as Mock;
@@ -55,7 +55,7 @@ describe("Redux Store Integration Test", () => {
 
         expect(state.animeList).toEqual(mockResponse.data);
         expect(state.pagination).toEqual(mockResponse.pagination);
-        expect(state.apiStatus?.status).toBe(200);
+        expect(state.apiStatus?.status).toBe("success");
     });
 
     test("dispatch(getAnimeList) handles error properly", async () => {

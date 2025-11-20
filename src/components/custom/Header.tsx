@@ -1,8 +1,6 @@
 
 import {Link} from 'react-router-dom';
 
-import './Header.css';
-
 export default function Header({onClick}:{onClick?:()=>void}){
 
     return (

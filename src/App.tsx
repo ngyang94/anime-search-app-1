@@ -2,7 +2,6 @@ import {Route, Routes} from 'react-router-dom';
 
 import Home from './pages/home/Home';
 import AnimeDetails from './pages/anime-details/AnimeDetails';
-import './App.css'
 
 function App() {
 
