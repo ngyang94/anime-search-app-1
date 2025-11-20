@@ -103,7 +103,7 @@ describe("Home page", ()=>{
             
             await waitFor(()=>{
                 expect(screen.getByTestId("input-group-search-anime")).toHaveTextContent("search-mock");
-            },{timeout:3500});
+            },{timeout:2250});
             await waitFor(()=>{
                 expect(screen.getByText(/this is a test title/i)).toHaveTextContent('this is a test title');
             });
@@ -296,8 +296,8 @@ describe("Home page", ()=>{
         });
 
         describe("the ellipsis on the pagination ui", ()=>{
-            it("popover a page no input field",()=>{
-                expect(screen.getByTestId("pagination")).toBeInTheDocument();
+            it("popover a page no input field", async () => {
+                expect(await screen.findByTestId("pagination")).toBeInTheDocument();
             });
         })
 

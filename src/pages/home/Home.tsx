@@ -56,7 +56,7 @@ export default function Home(){
         await dispatch(getAnimeList({animeName:args||"",abortController:abortController}));
         setIsLoading(false);
 
-    },1500);
+    },250);
 
     const gotoPage = async(page:number)=>{
 
@@ -110,7 +110,7 @@ export default function Home(){
     },[]);
 
     useEffect(()=>{
-        if(!!apiStatus&&apiStatus.status!=200){
+        if(!!apiStatus&&apiStatus.status!="success"&&apiStatus.status!="Aborted"){
             setShowErrorMessage(true);
             // setTimeout(()=>{
             //     setShowErrorMessage(false);
@@ -150,7 +150,7 @@ export default function Home(){
                 
                 <div data-testid="anime-list" className="m-5 p-5 grid grid-cols-3 gap-5 items-stretch">
                     {
-                        isLoading&&animeList.length==0&&(
+                        (isLoading||(!!apiStatus&&apiStatus.status=="Aborted"))&&(
                             skeletonAmountToRender.map((skeleton)=>{
                                 return (
                                     <Card className="px-2 py-2 h-full" key={skeleton}>
