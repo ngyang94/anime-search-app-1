@@ -57,26 +57,10 @@ export const getAnimeList = createAsyncThunk(
             if(abortController.signal.aborted){
                 throw new Error(
                     "499 Client Closed Request"
-                    // ,
-                    // {
-                    //     cause:{
-                    //         status:499,
-                    //         statusText:"Client Closed Request",
-                    //         message:"499 Client Closed Request"
-                    //     }
-                    // }
                 );
             }else{
                 throw new Error(
                     `API return status : ${response.status} ${response.statusText}`
-                    // ,
-                    // {
-                    //     cause:{
-                    //         status:response.status,
-                    //         statusText:response.statusText,
-                    //         message:`${response.status} ${response.statusText}`
-                    //     }
-                    // }
                 )
             };
 
@@ -84,10 +68,12 @@ export const getAnimeList = createAsyncThunk(
 
         const result = await response.json();
 
-        const apiStatus:apiStatus = {
-            status:200,
-            statusText:"",
-            message:""
+        const apiStatus:{apiStatus:apiStatus} = {
+            apiStatus:{
+                status:200,
+                statusText:"",
+                message:""
+            }
         }
         return {...result,...apiStatus};
     }

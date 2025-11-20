@@ -19,7 +19,7 @@ import { Button } from "@/components/ui/button"
 import {type paginationType} from '../../models/anime';
 import './PaginationV2.css';
 
-export default function PaginationV2({pagination,goToPage,maxPaginationAmountShow}:{pagination:paginationType,goToPage:(args:any)=>void,maxPaginationAmountShow:number}){
+export default function PaginationV2({pagination,goToPage,maxPaginationAmountShow=5}:{pagination:paginationType,goToPage:(args:any)=>void,maxPaginationAmountShow?:number}){
 
     const [inputPageNo,setInputPageNo] = useState<string>();
     const paginationNoToRender:number[] = [];
@@ -78,7 +78,7 @@ export default function PaginationV2({pagination,goToPage,maxPaginationAmountSho
        
     return (
         <>
-            <Pagination>
+            <Pagination data-testid="pagination">
                 <PaginationContent>
 
                     <PaginationItem>

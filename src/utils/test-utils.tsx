@@ -1,10 +1,10 @@
-import React, {type PropsWithChildren } from 'react'
+import React, {type PropsWithChildren, type ReactElement } from 'react'
 import { render } from '@testing-library/react'
 import {userEvent} from '@testing-library/user-event';
 import type { RenderOptions } from '@testing-library/react'
 // import { configureStore } from '@reduxjs/toolkit'
 import { Provider } from 'react-redux'
-import {BrowserRouter} from 'react-router-dom';
+import {BrowserRouter,createRoutesStub} from 'react-router-dom';
 
 import type { AppStore, RootState } from '../state/store'
 import { setupStore } from '../state/store'
@@ -18,27 +18,20 @@ interface ExtendedRenderOptions extends Omit<RenderOptions, 'queries'> {
   store?: AppStore
 }
 
-// export function renderWithProviders(
-//   ui: React.ReactElement,
-//   extendedRenderOptions: ExtendedRenderOptions = {}
-// ) {
-//   const {
-//     preloadedState = {},
-//     // Automatically create a store instance if no store was passed in
-//     store = setupStore(preloadedState),
-//     ...renderOptions
-//   } = extendedRenderOptions
+export const renderWithStub = (ui: React.ComponentType<any> | undefined, {route = '/', state = {}}: {route: string, state?: any}) => {
+  
+  const Stub = createRoutesStub([
+      {
+          path: route,
+          Component: ui
+      },
+  ]);
 
-//   const Wrapper = ({ children }: PropsWithChildren) => (
-//     <Provider store={store}>{children}</Provider>
-//   )
-
-//   // Return an object with the store and all of RTL's query functions
-//   return {
-//     store,
-//     ...render(ui, { wrapper: Wrapper, ...renderOptions })
-//   }
-// }
+  return {
+      user: userEvent.setup(),
+      ...render(<Stub initialEntries={[{pathname:route,state}]}/>),
+  }
+}
 
 export const renderWithProviderAndRouter = (ui:React.ReactNode,
   extendedRenderOptions: ExtendedRenderOptions = {}, {route = '/'} = {}) => {
@@ -48,7 +41,6 @@ export const renderWithProviderAndRouter = (ui:React.ReactNode,
         store = setupStore(preloadedState),
         ...renderOptions
     } = extendedRenderOptions
-
     const Wrapper = ({ children }: PropsWithChildren) => (
         <Provider store={store}><BrowserRouter>{children}</BrowserRouter></Provider>
     )

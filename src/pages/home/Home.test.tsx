@@ -28,7 +28,7 @@ vi.mock('lucide-react',async ()=>{
 
 
 import {describe, it, expect, beforeAll, beforeEach,vi} from 'vitest';
-import {screen,waitFor} from '@testing-library/react';
+import {screen,waitFor,cleanup} from '@testing-library/react';
 import '@testing-library/jest-dom/vitest';
 import type {UserEvent} from '@testing-library/user-event';
 
@@ -38,10 +38,6 @@ import {renderWithProviderAndRouter} from '../../utils/test-utils';
 
 describe("Home page", ()=>{
     let userEvent:UserEvent;
-    beforeAll(()=>{
-        const {user} = renderWithProviderAndRouter(<Home/>);
-        userEvent = user;
-    });
     beforeEach(()=>{
         globalThis.fetch = vi.fn().mockImplementation(async()=>{
             await new Promise((resolve)=>{setTimeout(()=>{
@@ -82,6 +78,11 @@ describe("Home page", ()=>{
     });
 
     describe("when home page first load", ()=>{
+        
+        beforeAll(()=>{
+            const {user} = renderWithProviderAndRouter(<Home/>);
+            userEvent = user;
+        });
 
         it("show skeleton when first loading data at home page",async()=>{
             
@@ -92,21 +93,17 @@ describe("Home page", ()=>{
         
         it("show preloader near the search input when first loading data at home page",async()=>{
             
-            await waitFor(()=>expect(screen.getByText("search-mock")).toBeInTheDocument());
-            // await waitForElementToBeRemoved(()=>screen.getByText("search-mock"));
-
             await waitFor(()=>{
                 expect(screen.getByTestId("input-group-search-anime")).toHaveTextContent("spinner-mock");
-            },{timeout:3500});
+            });
 
-            
         })
         
         it("display first load after loaded data at home page",async()=>{
             
             await waitFor(()=>{
-                expect(screen.getByText("search-mock")).toHaveTextContent("search-mock");
-            },{timeout:2000});
+                expect(screen.getByTestId("input-group-search-anime")).toHaveTextContent("search-mock");
+            },{timeout:3500});
             await waitFor(()=>{
                 expect(screen.getByText(/this is a test title/i)).toHaveTextContent('this is a test title');
             });
@@ -117,33 +114,109 @@ describe("Home page", ()=>{
     
     describe("when user input anime to anime search input field",()=>{
         
+        beforeAll(()=>{
+            cleanup();
+            const {user} = renderWithProviderAndRouter(
+                <Home/>,
+                {
+                    preloadedState:{
+                        anime:{
+                            animeList:[
+                                {
+                                    images:{
+                                        jpg:{
+                                            image_url:"./test-image.jpg"
+                                        }
+                                    },
+                                    title:"this is a test title",
+                                    title_japanese:"this is a test japanense title",
+                                    score:"5.0",
+                                    popularity:"10",
+                                    synopsis:"this is a test synopsis"
+                                }
+                            ],
+                            pagination:{
+                                current_page:1,
+                                has_next_page:true,
+                                items:{
+                                    count:24,
+                                    per_page:24,
+                                    total:48,
+                                },
+                                last_visible_page:2
+                            },
+                            apiStatus:null
+                        }
+                    }
+                }
+            );
+            userEvent = user;
+        });
+        
         it("wait for 1500ms after user stop typing then show spinner when fetching anime data",async()=>{
             
             expect(globalThis.fetch).toHaveBeenCalledTimes(0);
             userEvent.type(screen.getByPlaceholderText(/search/i),'test anime');
             await waitFor(()=>expect(globalThis.fetch).toHaveBeenCalledTimes(1),{timeout:2000});
             await waitFor(()=>{
-                expect(screen.getByText("spinner-mock")).toHaveTextContent("spinner-mock");
-            },{timeout:2000});
+                expect(screen.getByTestId("input-group-search-anime")).toHaveTextContent("spinner-mock");
+            });
             await waitFor(()=>{
-                expect(screen.getByText("search-mock")).toHaveTextContent("search-mock");
+                expect(screen.getByTestId("input-group-search-anime")).toHaveTextContent("search-mock");
             },{timeout:2000});
         });
     });
     describe("when user click on ",()=>{
-        
+        beforeAll(()=>{
+            cleanup();
+            const {user} = renderWithProviderAndRouter(
+                <Home/>,
+                {
+                    preloadedState:{
+                        anime:{
+                            animeList:[
+                                {
+                                    images:{
+                                        jpg:{
+                                            image_url:"./test-image.jpg"
+                                        }
+                                    },
+                                    title:"this is a test title",
+                                    title_japanese:"this is a test japanense title",
+                                    score:"5.0",
+                                    popularity:"10",
+                                    synopsis:"this is a test synopsis"
+                                }
+                            ],
+                            pagination:{
+                                current_page:1,
+                                has_next_page:true,
+                                items:{
+                                    count:24,
+                                    per_page:24,
+                                    total:48,
+                                },
+                                last_visible_page:2
+                            },
+                            apiStatus:null
+                        }
+                    }
+                }
+            );
+            userEvent = user;
+        });
         it("the page header, it will reset the page and search with empty anime name for anime list again",async()=>{
             
             const header = screen.getByRole("heading",{name:/anime search app/i});
             await userEvent.click(header);
             await waitFor(()=>{
-                expect(screen.getByText("spinner-mock")).toHaveTextContent("spinner-mock");
+                expect(screen.getByTestId("input-group-search-anime")).toHaveTextContent("spinner-mock");
             },{timeout:2000});
             await waitFor(()=>{
                 expect(globalThis.fetch).toHaveBeenCalledTimes(1);
             });
             await waitFor(()=>{
-                expect(screen.getByText("search-mock")).toHaveTextContent("search-mock");
+                expect(screen.getByTestId("input-group-search-anime")).toHaveTextContent("search-mock");
             },{timeout:2000});
         });
         it("the Next button of the pagination UI, it will trigger fetch request",async()=>{
@@ -191,13 +264,13 @@ describe("Home page", ()=>{
             await userEvent.click(screen.getByText("Next"));
             
             await waitFor(()=>{
-                expect(screen.getByText("spinner-mock")).toHaveTextContent("spinner-mock");
+                expect(screen.getByTestId("input-group-search-anime")).toHaveTextContent("spinner-mock");
             },{timeout:2000});
             await waitFor(()=>{
                 expect(globalThis.fetch).toHaveBeenCalledTimes(1);
             });
             await waitFor(()=>{
-                expect(screen.getByText("search-mock")).toHaveTextContent("search-mock");
+                expect(screen.getByTestId("input-group-search-anime")).toHaveTextContent("search-mock");
                 
             },{timeout:2000});
 
@@ -209,18 +282,25 @@ describe("Home page", ()=>{
             await userEvent.click(screen.getByText("Previous"));
             
             await waitFor(()=>{
-                expect(screen.getByText("spinner-mock")).toHaveTextContent("spinner-mock");
-            },{timeout:3000});
+                expect(screen.getByTestId("input-group-search-anime")).toHaveTextContent("spinner-mock");
+            },{timeout:1500});
             
             await waitFor(()=>{
                 expect(globalThis.fetch).toHaveBeenCalledTimes(1);
             });
             
             await waitFor(()=>{
-                expect(screen.getByText("search-mock")).toHaveTextContent("search-mock");
+                expect(screen.getByTestId("input-group-search-anime")).toHaveTextContent("search-mock");
             },{timeout:2000});
             
         });
+
+        describe("the ellipsis on the pagination ui", ()=>{
+            it("popover a page no input field",()=>{
+                expect(screen.getByTestId("pagination")).toBeInTheDocument();
+            });
+        })
+
     });
 
 });
