@@ -52,12 +52,20 @@ export default function PaginationV2({pagination,goToPage,maxPaginationAmountSho
     }
 
     function inputPageNoHandler(event:FormEvent<HTMLInputElement>){
+        
         if(pagination?.last_visible_page&&parseInt(event.currentTarget.value)>pagination?.last_visible_page){
             event.currentTarget.value=pagination?.last_visible_page.toString();
             setInputPageNo(pagination?.last_visible_page.toString());
         }else{
-            setInputPageNo(event.currentTarget.value);
+            if(parseInt(event.currentTarget.value)<=0){
+                event.currentTarget.value="1";
+                setInputPageNo("1");
+            }else{
+                // event.currentTarget.value=event.currentTarget.value;
+                setInputPageNo(event.currentTarget.value);
+            }
         }
+        
     }
 
     function gotoPageNoButtonHandler(){
