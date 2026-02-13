@@ -17,10 +17,10 @@ export default function AnimeDetails(){
         <>
             <Header/>
 
-            <main className="bg-white pb-1 px-10 h-screen">
-                <div className="grid grid-cols-7 gap-8 py-5">
+            <main className="bg-white pb-1 px-10 h-full">
+                <div className="grid lg:grid-cols-7 sm:grid-cols-2 gap-8 py-5">
                     <div className="col-span-2">
-                        <div className="w-1xl h-1xl bg-black overflow-hidden">
+                        <div className="w-1xl h-1xl overflow-hidden">
                             <img className="object-fill h-full" src={animeDetails?.images?.jpg?.image_url} alt={animeDetails?.title}/>
                         </div>
                     </div>
