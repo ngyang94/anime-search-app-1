@@ -150,7 +150,7 @@ export default function Home(){
                     </div>
                 }
                 
-                <div data-testid="anime-list" className="m-5 p-5 grid grid-cols-3 gap-5 items-stretch">
+                <div data-testid="anime-list" className="m-5 p-5 grid lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1 gap-5 items-stretch">
                     {
                         (isLoading||(!!apiStatus&&apiStatus.status=="Aborted"))&&(
                             skeletonAmountToRender.map((skeleton)=>{
